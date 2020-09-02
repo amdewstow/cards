@@ -1,4 +1,9 @@
 <?php
+    /**
+     * Will generate playing cards 
+     *
+     * @author Anthony Dewstow
+     */
     class cards {
         private $nums = array( );
         private $colors = array( );
@@ -14,21 +19,49 @@
         private $font_size_small = 120;
         private $font_size_text = 110;
         private $filledellipse = array( );
+        /**
+         * sets card width
+         * @param int $w 
+         */
         public function set_width( $w ) {
             $this->h = $w;
         }
+        /**
+         * sets card height
+         * @param int $h 
+         */
         public function set_height( $h ) {
             $this->h = $h;
         }
+        /**
+         * sets card cutt width
+         * @param int $cutt 
+         */
         public function set_cutt( $cutt ) {
             $this->cutt = $cutt;
         }
+        /**
+         * sets card numbers
+         * @param array $w 
+         */
         public function set_nums( $nums ) {
             $this->nums = $nums;
         }
+        /**
+         * sets card numbers via range
+         * @param int $low lowest number 
+         * @param int $highe highest  number 
+         * @param int $per how often in the range
+         */
         public function set_nums_rnage( $low, $highe, $per = 1 ) {
             $this->nums = range( $low, $highe, $per );
         }
+        /**
+         * Adds color set to numbered cards
+         * @param int $r Red
+         * @param int $g Green
+         * @param int $b Blue
+         */
         public function add_color( $name, $r, $g, $b ) {
             $this->colors[ $name ] = array(
                  $r,
@@ -36,27 +69,60 @@
                 $b 
             );
         }
+        /**
+         * Adds filled ellipse
+         * @param int $x x position 
+         * @param int $y y position
+         */
         public function add_filledellipse( $x, $y ) {
             $this->filledellipse[ ] = array(
                  $x,
                 $y 
             );
         }
+        /**
+         * Set Save location of cards 
+         * @param string $save_in full folder location
+         */
         public function set_save_in( $save_in ) {
             $this->save_in = $save_in;
         }
+        /**
+         * Set font file to be used
+         * @param string $font full file location
+         */
         public function set_font( $font ) {
             $this->font = $font;
         }
+        /**
+         * Set main font size
+         * @param int $font_size_main
+         */
         public function set_font_size_main( $font_size_main ) {
             $this->font_size_main = $font_size_main;
         }
+        /**
+         * Set main font size for corner numbers
+         * @param int $font_size_small
+         */
         public function set_font_size_small( $font_size_small ) {
             $this->font_size_small = $font_size_small;
         }
+        /**
+         * Set main font size for text cards
+         * @param int $font_size_text
+         */
         public function set_font_size_text( $font_size_text ) {
             $this->font_size_text = $font_size_text;
         }
+        /**
+         * Add Text card
+         * @param text $name Text of the card
+         * @param int $n Number of them
+         * @param array $tc array(red, green, blue) of text color
+         * @param array $bg array(red, green, blue) of offset color
+         * @param array $cc array(red, green, blue) of background color
+         */
         public function add_text( $name, $n, $tc = array( 255, 0, 0 ), $bg = array( 0, 0, 0 ), $cc = array( 255, 255, 255 ) ) {
             $aa                  = array( );
             $aa[ 'num' ]         = $n;
@@ -65,6 +131,9 @@
             $aa[ 'cc' ]          = $cc;
             $this->text[ $name ] = $aa;
         }
+        /**
+         * Makes all the cards
+         */
         public function make( ) {
             $this->make_nums();
             $this->make_texts();

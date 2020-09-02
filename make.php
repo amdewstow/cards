@@ -11,7 +11,7 @@
     $cards->add_color( 'yellow', 240, 240, 0 );
     $cards->add_color( 'green', 19, 171, 39 );
     $cards->add_color( 'blue', 0, 0, 240 );
-    $cards->add_text( 'SKIP', 4 );
+    $cards->add_text( 'EXAMPLE', 1 );
     $black = array(
          0,
         0,
