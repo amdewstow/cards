@@ -1,6 +1,7 @@
 <?php
     /**
-     * Will generate playing cards 
+     * Generates playing cards
+     * Make deck formats for tabletop simulator
      *
      * @author Anthony Dewstow
      */
@@ -14,6 +15,7 @@
         private $save_in = './images/';
         private $show = 'images/';
         public $files = array( );
+        public $files_tt = array( );
         private $font = 'arial.ttf';
         private $font_size_main = 150;
         private $font_size_small = 120;
@@ -24,7 +26,7 @@
          * @param int $w 
          */
         public function set_width( $w ) {
-            $this->h = $w;
+            $this->w = $w;
         }
         /**
          * sets card height
@@ -137,6 +139,52 @@
         public function make( ) {
             $this->make_nums();
             $this->make_texts();
+        }
+        /**
+         * Makes large PNG for Tabletop Simulator's deck format
+         */
+        public function make_tabletop_simulator( ) {
+            //10x7
+            $wm             = 10;
+            $hm             = 7;
+            $w              = 0;
+            $h              = 0;
+            $img            = null;
+            $this->files_tt = array( );
+            $fk             = 1;
+            foreach ( $this->files as $ff ) {
+                if ( $img == null ) {
+                    $img   = imagecreatetruecolor( $this->w * $wm, $this->h * $hm );
+                    $white = imagecolorallocate( $img, 255, 255, 255 );
+                    imagefill( $img, 0, 0, $white );
+                    $as = "tt_" . str_pad( $fk, 2, "0", STR_PAD_LEFT ) . ".png";
+                    echo "<br>++" . $as;
+                }
+                //echo "<br>" . $ff ." ".$w.",".$h;
+                $from = imagecreatefrompng( $ff );
+                imagecopy( $img, $from, $this->w * $w, $this->h * $h, 0, 0, $this->w, $this->h );
+                $w++;
+                if ( $w >= $wm ) {
+                    $h++;
+                    $w = 0;
+                }
+                if ( $h >= $hm ) {
+                    $w = 0;
+                    $h = 0;
+                    $fk++;
+                    imagepng( $img, $this->save_in . $as );
+                    $this->files_tt[ ] = $as;
+                    imagedestroy( $img );
+                    echo " <img src='" . $this->show . $as . "' width='" . ( ( $this->w * $wm ) * .3 ) . "px'/>";
+                    $img = null;
+                }
+            }
+            if ( $img != null ) {
+                imagepng( $img, $this->save_in . $as );
+                $this->files_tt[ ] = $as;
+                imagedestroy( $img );
+                echo " <img src='" . $this->show . $as . "' width='" . ( ( $this->w * $wm ) * .3 ) . "px'/>";
+            }
         }
         public function make_nums( ) {
             foreach ( $this->colors as $name => $rgb ) {

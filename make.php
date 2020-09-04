@@ -41,6 +41,9 @@
                 }
             }
         }
-    }    
+    }
     $cards->make();
     echo "<pre>" . print_r( $cards->files, true ) . "</pre>";
+    $cards->make_tabletop_simulator();
+    
+    echo "<pre>" . print_r( $cards->files_tt, true ) . "</pre>";
