@@ -42,8 +42,11 @@
             }
         }
     }
+    $cards->add_text( 'SKIP', 2 );
+    $cards->add_text( 'WILD', 4 );
     $cards->make();
     echo "<pre>" . print_r( $cards->files, true ) . "</pre>";
     $cards->make_tabletop_simulator();
-    
+    $cards->make_back();
+    $cards->make_back( "Extra", $green, $black, $white );
     echo "<pre>" . print_r( $cards->files_tt, true ) . "</pre>";

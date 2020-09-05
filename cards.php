@@ -21,6 +21,7 @@
         private $font_size_small = 120;
         private $font_size_text = 110;
         private $filledellipse = array( );
+        private $backn = 1;
         /**
          * sets card width
          * @param int $w 
@@ -158,9 +159,9 @@
                     $white = imagecolorallocate( $img, 255, 255, 255 );
                     imagefill( $img, 0, 0, $white );
                     $as = "tt_" . str_pad( $fk, 2, "0", STR_PAD_LEFT ) . ".png";
-                    echo "<br>++" . $as;
+                    //echo "<br>++" . $as;
                 }
-                //echo "<br>" . $ff ." ".$w.",".$h;
+                //echo "<br>" . $ff . " " . $w . "," . $h;
                 $from = imagecreatefrompng( $ff );
                 imagecopy( $img, $from, $this->w * $w, $this->h * $h, 0, 0, $this->w, $this->h );
                 $w++;
@@ -175,7 +176,7 @@
                     imagepng( $img, $this->save_in . $as );
                     $this->files_tt[ ] = $as;
                     imagedestroy( $img );
-                    echo " <img src='" . $this->show . $as . "' width='" . ( ( $this->w * $wm ) * .3 ) . "px'/>";
+                    echo "<hr> <img src='" . $this->show . $as . "' width='" . ( ( $this->w * $wm ) * .2 ) . "px'/>";
                     $img = null;
                 }
             }
@@ -183,8 +184,57 @@
                 imagepng( $img, $this->save_in . $as );
                 $this->files_tt[ ] = $as;
                 imagedestroy( $img );
-                echo " <img src='" . $this->show . $as . "' width='" . ( ( $this->w * $wm ) * .3 ) . "px'/>";
+                echo "<hr> <img src='" . $this->show . $as . "' width='" . ( ( $this->w * $wm ) * .2 ) . "px'/>";
             }
+        }
+        public function make_back( $text = 'CARDS', $tc = array( 255, 0, 0 ), $bg = array( 0, 0, 0 ), $cc = array( 255, 255, 255 ) ) {
+            $img   = imagecreatetruecolor( $this->w, $this->h );
+            $red   = imagecolorallocate( $img, $tc[ 0 ], $tc[ 1 ], $tc[ 2 ] );
+            $white = imagecolorallocate( $img, $cc[ 0 ], $cc[ 1 ], $cc[ 2 ] );
+            $black = imagecolorallocate( $img, $bg[ 0 ], $bg[ 1 ], $bg[ 2 ] );
+            imagefill( $img, 0, 0, $black );
+            $font_file = $this->font;
+            $fzb       = $this->font_size_text;
+            //main text
+            $bb        = imagettfbbox( $fzb, 0, $font_file, $text );
+            while ( $bb[ 2 ] > ( $this->w - 40 ) ) {
+                $fzb--;
+                $bb = imagettfbbox( $fzb, 0, $font_file, $text );
+            }
+            $tw = $bb[ 2 ] - $bb[ 0 ];
+            $th = $bb[ 7 ] - $bb[ 1 ];
+            $xc = ( $this->w / 2 ) - ( $tw / 2 );
+            $yc = ( $this->h / 2 ) - ( $th / 2 );
+            $this->wrap_text( $img, $fzb, 0, $xc, $yc, 5, $white, $font_file, $text );
+            imagettftext( $img, $fzb, 0, $xc, $yc, $red, $font_file, $text );
+            $n   = 'github.com/amdewstow/cards';
+            $fzn = 100;
+            $bb  = imagettfbbox( $fzn, 0, $font_file, $n );
+            while ( $bb[ 2 ] > ( $this->w - 40 ) ) {
+                $fzn--;
+                $bb = imagettfbbox( $fzn, 0, $font_file, $n );
+            }
+            $tw = $bb[ 2 ] - $bb[ 0 ];
+            $th = $bb[ 7 ] - $bb[ 1 ];
+            $xc = ( $this->w / 2 ) - ( $tw / 2 );
+            $yc = ( $this->h ) - ( $this->cutt * 2 ) - abs( $th );
+            $this->wrap_text( $img, $fzn, 0, $xc, $yc, 5, $white, $font_file, $n );
+            imagettftext( $img, $fzn, 0, $xc, $yc, $red, $font_file, $n );
+            //cutt card
+            $cutt_white = imagecolorallocate( $img, 255, 255, 255 );
+            imagefilledrectangle( $img, 0, 0, $this->w, $this->cutt, $cutt_white );
+            imagefilledrectangle( $img, $this->w, $this->h, $this->w - $this->cutt, 0, $cutt_white );
+            imagefilledrectangle( $img, 0, $this->h, $this->cutt, $this->cutt, $cutt_white );
+            imagefilledrectangle( $img, 0, $this->h, $this->w, $this->h - $this->cutt, $cutt_white );
+            $as = "deck_back" . str_pad( $this->backn, 2, "0", STR_PAD_LEFT ) . ".png";
+            $this->backn++;
+            imagepng( $img, $this->save_in . $as );
+            $this->deck_back = $this->save_in . $as;
+            echo " <img src='" . $this->show . $as . "' width='100px'/>";
+            ob_flush();
+            flush();
+            imagedestroy( $img );
+            return $this->deck_back;
         }
         public function make_nums( ) {
             foreach ( $this->colors as $name => $rgb ) {
